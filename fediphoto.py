@@ -42,8 +42,8 @@ def poll_feed(feedurl):
 			modfile = 'pics/' + 'mod_' + filename
 			needs_print = True
 			needs_dl = True
-			if not '.jpg' in attachment['url']:
-				print('not .jpg')
+			if not attachment['type'] == 'image':
+				print('not image')
 				needs_print = False
 				needs_dl = False
 			if Path('pics/printed/' + filename).is_file():
@@ -59,6 +59,8 @@ def poll_feed(feedurl):
 			if needs_print:
 				label = status['account']['display_name'] + '\n' + fediuser
 				img = Image.open('pics/' + filename)
+				if img.mode != 'RGB':
+					img = img.convert('RGB')
 				draw = ImageDraw.Draw(img)
 				topaz = ImageFont.truetype('topaz_unicode_ks13_regular.ttf', int(img.size[0] / 30))
 				draw.text((img.size[0] / 30, img.size[1] / 30), label, fill=(255,255,255), stroke_fill=(0,0,0), stroke_width=5, font=topaz)
